@@ -1,0 +1,11 @@
+.custom-color {
+  background: linear-gradient(#e66465, #9198e5);
+  font-weight: bolder;
+}
+
+body {
+  background-color: #ffe9ff;
+}
+.fa-search {
+  color: black;
+}
