@@ -71,16 +71,33 @@ function getCityWeather(city) {
       console.log("data", data);
 
       console.log("here");
-      //  console.log(rocketId, '\n');
 
-      // return fetch("https://api.openweathermap.org/data/2.5/onecall?lat="+lat+"&lon="+lon+"&appid="+apiKey); // make a 2nd request and return a promise
+      return fetch(
+        "https://api.openweathermap.org/data/2.5/onecall?lat=" +
+          lat +
+          "&lon=" +
+          lon +
+          "&appid=" +
+          apiKey +
+          "&units=imperial"
+      ); // make a 2nd request and return a promise
+    })
+    .then(function (response) {
+      if (response.ok) {
+        response.json().then(function (data) {
+          console.log("data is ", data);
+          // // console.log("typeof", typeof data);
+          displayTodaysWeather(data, city);
+          displayForecast(data, city);
+          addToHistory(city);
+        });
+      } else {
+        alert("Error: " + response.statusText);
+      }
+    })
+    .catch(function (error) {
+      console.log("Request failed", error);
     });
-  // .then(function(response) {
-  //   return response.json();
-  // })
-  // .catch(function(error) {
-  //   console.log('Request failed', error)
-  // })
 }
 
 function buttonClickHandler(event) {
@@ -90,7 +107,7 @@ function buttonClickHandler(event) {
   } else {
     var cityNameClicked = searchedCityEl.value;
     console.log(cityNameClicked);
-    //getCityWeather(cityNameClicked);
+    getCityWeather(cityNameClicked);
   }
 }
 
@@ -123,9 +140,9 @@ function addToHistory(cityclicked) {
 }
 
 function displayTodaysWeather(weatherData, cityname) {
-  //console.log("data is" + JSON.stringify(weatherData));
+  //why its showinh object object not here in the fetch section console.log("data is" + weatherData);
   // console.log("city is ", cityname);
-  // console.log(" Temperature:" + " " + weatherData.main.temp + " " + "ºF");
+  console.log(" Temperature:" + " " + weatherData.current.temp + " " + "ºF");
 }
 submitButtonEl.addEventListener("click", searchSubmitHandler);
 searchHistoryButtonsEl.addEventListener("click", buttonClickHandler);
