@@ -8,16 +8,16 @@ var currentWeatherDisplayEl = document.querySelector(".current-weather");
 var searchedCityEl = document.querySelector("#city-selected");
 var listOfCitiesSearched =
   JSON.parse(localStorage.getItem("ListOfCities")) || [];
-var searchHistoryButtonsEl = document.querySelector(".list-of-city");
-var currentWeatherDisplayEl = document.querySelector(".current-weather");
-var listOfCitiesSearched = [];
+// var searchHistoryButtonsEl = document.querySelector(".list-of-city");
+// var currentWeatherDisplayEl = document.querySelector(".current-weather");
+// var listOfCitiesSearched = [];
 
 function searchSubmitHandler(event) {
   event.preventDefault();
   var cityName = cityNameEl.value.trim();
   console.log("in submit ", cityName);
   if (cityName) {
-    // getCityWeather(cityName);
+    getCityWeather(cityName);
     addToHistory(cityName);
     currentWeatherDisplayEl.textContent = "";
     cityNameEl.value = "";
@@ -37,30 +37,61 @@ function getCityWeather(city) {
     "&units=imperial";
 
   console.log("apiURL", apiUrl);
+  // fetch(apiUrl)
+  //   .then(function (response) {
+  //     if (response.ok) {
+  //       response.json().then(function (data) {
+  //         console.log("data is ", data);
+  //         // console.log("typeof", typeof data);
+  //         displayTodaysWeather(data, city);
+  //         addToHistory(city);
+  //         return;
+  //       });
+  //     } else {
+  //       alert("Error: " + response.statusText);
+  //     }
+  //   })
+  //   .catch(function (error) {
+  //     alert("Unable to connect to weather api");
+  //   });
   fetch(apiUrl)
     .then(function (response) {
       if (response.ok) {
-        response.json().then(function (data) {
-          console.log("data is ", data);
-          // console.log("typeof", typeof data);
-          displayTodaysWeather(data, city);
-          addToHistory(city);
-          return;
-        });
+        // console.log("dtata", data);
+        return response.json();
       } else {
         alert("Error: " + response.statusText);
-      }
+      } // pass the data as promise to next then block
     })
-    .catch(function (error) {
-      alert("Unable to connect to weather api");
+    .then(function (data) {
+      var lat = data.coord.lat;
+      var lon = data.coord.lon;
+      console.log("lat", lat);
+      console.log("lon", lon);
+      console.log("data", data);
+
+      console.log("here");
+      //  console.log(rocketId, '\n');
+
+      // return fetch("https://api.openweathermap.org/data/2.5/onecall?lat="+lat+"&lon="+lon+"&appid="+apiKey); // make a 2nd request and return a promise
     });
+  // .then(function(response) {
+  //   return response.json();
+  // })
+  // .catch(function(error) {
+  //   console.log('Request failed', error)
+  // })
 }
 
 function buttonClickHandler(event) {
   //var cityNameClicked = event.target.getAttribute("id");
-  var cityNameClicked = searchedCityEl.value;
-  console.log(cityNameClicked);
-  //getCityWeather(cityNameClicked);
+  if (searchedCityEl.value == "Searched Cities") {
+    alert("Please  select an option");
+  } else {
+    var cityNameClicked = searchedCityEl.value;
+    console.log(cityNameClicked);
+    //getCityWeather(cityNameClicked);
+  }
 }
 
 function showSearchedHistory() {
