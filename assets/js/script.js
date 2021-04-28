@@ -8,6 +8,9 @@ var currentWeatherDisplayEl = document.querySelector(".current-weather");
 var searchedCityEl = document.querySelector("#city-selected");
 var listOfCitiesSearched =
   JSON.parse(localStorage.getItem("ListOfCities")) || [];
+var searchHistoryButtonsEl = document.querySelector(".list-of-city");
+var currentWeatherDisplayEl = document.querySelector(".current-weather");
+var listOfCitiesSearched = [];
 
 function searchSubmitHandler(event) {
   event.preventDefault();
@@ -94,5 +97,4 @@ function displayTodaysWeather(weatherData, cityname) {
   // console.log(" Temperature:" + " " + weatherData.main.temp + " " + "ºF");
 }
 submitButtonEl.addEventListener("click", searchSubmitHandler);
-
 searchHistoryButtonsEl.addEventListener("click", buttonClickHandler);
