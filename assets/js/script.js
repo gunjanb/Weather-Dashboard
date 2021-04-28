@@ -17,7 +17,7 @@ function searchSubmitHandler(event) {
   var cityName = cityNameEl.value.trim();
   console.log("in submit ", cityName);
   if (cityName) {
-    getCityWeather(cityName);
+    // getCityWeather(cityName);
     addToHistory(cityName);
     currentWeatherDisplayEl.textContent = "";
     cityNameEl.value = "";
@@ -77,6 +77,7 @@ function getCityWeather(city) {
           lat +
           "&lon=" +
           lon +
+          "&exclude=minutely,hourly" +
           "&appid=" +
           apiKey +
           "&units=imperial"
@@ -142,7 +143,35 @@ function addToHistory(cityclicked) {
 function displayTodaysWeather(weatherData, cityname) {
   //why its showinh object object not here in the fetch section console.log("data is" + weatherData);
   // console.log("city is ", cityname);
-  console.log(" Temperature:" + " " + weatherData.current.temp + " " + "ºF");
+  var todayDate = moment().format("MM/DD/YYYY");
+  console.log(todayDate);
+  //name of city , date
+  var cityDisplayNameEl = document.createElement("h2");
+  cityDisplayNameEl.textContent =
+    cityname + " " + todayDate + " " + weatherData.weather.icon;
+
+  //temp
+  var tempDisplayEl = document.createElement("p");
+  tempDisplayEl.textContent = "Temp: " + weatherData.current.temp + " ºF";
+  //wind
+  var windDisplayEl = document.createElement("p");
+  windDisplayEl.textContent = "Temp: " + weatherData.current.temp + " ºF";
+  //humidity
+  //uv index 1-2 low green,3-5 moderate yellow orange, 6-7high orange,8-9-10 very high red, 11+ extreme  purple
+  currentWeatherDisplayEl;
+
+  // console.log(" Temperature:" + " " + weatherData.current.temp + " " + "ºF");
+}
+
+displayTodaysWeather();
+displayForecast();
+function displayForecast(weatherData, city) {
+  for (var i = 0; i < 5; i++) {
+    var dueDate = moment()
+      .add(i + 1, "days")
+      .format("MM/DD/YYYY");
+    console.log(dueDate);
+  }
 }
 submitButtonEl.addEventListener("click", searchSubmitHandler);
 searchHistoryButtonsEl.addEventListener("click", buttonClickHandler);
