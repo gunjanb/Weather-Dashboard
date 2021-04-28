@@ -6,6 +6,7 @@ var submitButtonEl = document.querySelector("#submit-search");
 var searchHistoryButtonsEl = document.querySelector("#button-clicked");
 var currentWeatherDisplayEl = document.querySelector(".current-weather");
 var searchedCityEl = document.querySelector("#city-selected");
+var forecastEl = document.querySelector(".next-five-days");
 var listOfCitiesSearched =
   JSON.parse(localStorage.getItem("ListOfCities")) || [];
 // var searchHistoryButtonsEl = document.querySelector(".list-of-city");
@@ -160,7 +161,13 @@ function displayTodaysWeather(weatherData, cityname) {
     ".png";
 
   image.setAttribute("src", imageUrl);
-  cityDisplayNameEl.textContent = cityname + " " + todayDate + "";
+  cityDisplayNameEl.innerHTML =
+    cityname +
+    " " +
+    "<span style='font-size: 1.4rem;'>" +
+    todayDate +
+    "</span>" +
+    "";
 
   cityDisplayNameEl.append(image);
   //temp
@@ -176,9 +183,20 @@ function displayTodaysWeather(weatherData, cityname) {
     "Humidity: " + weatherData.current.humidity + " %";
   //uv index 1-2 low green,3-5 moderate yellow orange, 6-7high orange,8-9-10 very high red, 11+ extreme  purple
   var uvDisplayEl = document.createElement("p");
+  if (weatherData.current.uvi < 3) {
+    var innertext =
+      "<span style='background-color:green; border-radius:25%; padding:0.25rem'>";
+  } else if (weatherData.current.uvi < 7) {
+    var innertext =
+      "<span style='background-color:orange; border-radius:25%; padding:0.25rem'>";
+  } else if (weatherData.current.uvi > 7) {
+    var innertext =
+      "<span style='background-color:red; border-radius:25%; padding:0.25rem'>";
+  }
   uvDisplayEl.innerHTML =
     "UV: " +
-    "<span style='background-color:green; border-radius:25%; padding:0.25rem'>" +
+    // "<span style='background-color:green; border-radius:25%; padding:0.25rem'>" +
+    innertext +
     weatherData.current.uvi +
     "</span>";
   //span.setAttribute("style","color:white;background-color:red;");
@@ -198,12 +216,64 @@ function displayTodaysWeather(weatherData, cityname) {
 // displayTodaysWeather();
 // displayForecast();
 function displayForecast(weatherData, city) {
+  forecastEl.textContent = "";
   for (var i = 0; i < 5; i++) {
-    var dueDate = moment()
+    var nextDate = moment()
       .add(i + 1, "days")
       .format("MM/DD/YYYY");
-    console.log(dueDate);
+    //console.log(dueDate);
+    //genetrate a card
+
+    var divEl = document.createElement("div");
+    //date,img
+    var dateEl = document.createElement("p");
+    dateEl.textContent = nextDate;
+
+    console.log(weatherData.daily[i].weather[0].icon);
+    //image
+    var image = document.createElement("img");
+    var imageUrl =
+      "https://openweathermap.org/img/w/" +
+      weatherData.daily[i].weather[0].icon +
+      ".png";
+
+    image.setAttribute("src", imageUrl);
+
+    //temp
+    var tempEl = document.createElement("p");
+    tempEl.textContent = "Temp: " + weatherData.daily[i].temp.day + " ºF";
+    //wind
+    var windEl = document.createElement("p");
+    windEl.textContent = "Wind: " + weatherData.daily[i].wind_speed + " MPH";
+    //humidity
+    var humidityEl = document.createElement("p");
+    humidityEl.textContent =
+      "Humidity: " + weatherData.daily[i].humidity + " %";
+
+    // divEl
+    //   .append(dateEl)
+    //   .append(image)
+    //   .append(tempEl)
+    //   .append(windEl)
+    //   .append(humidityEl);
+    //script.js:240 Uncaught (in promise) TypeError: Cannot read property 'append' of undefined
+    // at displayForecast (script.js:240)
+    // at script.js:92
+    divEl.setAttribute(
+      "style",
+      " padding:1rem;font-weight:bold;background-color:#9198e5; border-style: solid;border-radius:5%; margin:0.1rem;"
+    );
+    //dif in append and appendchild
+    $(divEl).addClass("flex-fill");
+    divEl.append(dateEl);
+    divEl.append(image);
+    divEl.append(tempEl);
+    divEl.append(windEl);
+    divEl.append(humidityEl);
+    forecastEl.append(divEl);
   }
 }
 submitButtonEl.addEventListener("click", searchSubmitHandler);
 searchHistoryButtonsEl.addEventListener("click", buttonClickHandler);
+
+getCityWeather("seattle");
