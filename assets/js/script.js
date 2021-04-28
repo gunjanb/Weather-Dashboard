@@ -17,7 +17,7 @@ function searchSubmitHandler(event) {
   var cityName = cityNameEl.value.trim();
   console.log("in submit ", cityName);
   if (cityName) {
-    // getCityWeather(cityName);
+    getCityWeather(cityName);
     addToHistory(cityName);
     currentWeatherDisplayEl.textContent = "";
     cityNameEl.value = "";
@@ -142,29 +142,61 @@ function addToHistory(cityclicked) {
 
 function displayTodaysWeather(weatherData, cityname) {
   //why its showinh object object not here in the fetch section console.log("data is" + weatherData);
-  // console.log("city is ", cityname);
+  console.log("city is ", cityname);
   var todayDate = moment().format("MM/DD/YYYY");
   console.log(todayDate);
   //name of city , date
+  currentWeatherDisplayEl.textContent = "";
+  console.log(weatherData.current.temp);
   var cityDisplayNameEl = document.createElement("h2");
-  cityDisplayNameEl.textContent =
-    cityname + " " + todayDate + " " + weatherData.weather.icon;
 
+  var cityname =
+    cityname.charAt(0).toUpperCase() + cityname.slice(1).toLowerCase();
+
+  var image = document.createElement("img");
+  var imageUrl =
+    "https://openweathermap.org/img/wn/" +
+    weatherData.current.weather[0].icon +
+    ".png";
+
+  image.setAttribute("src", imageUrl);
+  cityDisplayNameEl.textContent = cityname + " " + todayDate + "";
+
+  cityDisplayNameEl.append(image);
   //temp
   var tempDisplayEl = document.createElement("p");
   tempDisplayEl.textContent = "Temp: " + weatherData.current.temp + " ºF";
   //wind
   var windDisplayEl = document.createElement("p");
-  windDisplayEl.textContent = "Temp: " + weatherData.current.temp + " ºF";
+  windDisplayEl.textContent =
+    "Wind: " + weatherData.current.wind_speed + " MPH";
   //humidity
+  var humidityDisplayEl = document.createElement("p");
+  humidityDisplayEl.textContent =
+    "Humidity: " + weatherData.current.humidity + " %";
   //uv index 1-2 low green,3-5 moderate yellow orange, 6-7high orange,8-9-10 very high red, 11+ extreme  purple
-  currentWeatherDisplayEl;
+  var uvDisplayEl = document.createElement("p");
+  uvDisplayEl.innerHTML =
+    "UV: " +
+    "<span style='background-color:green; border-radius:25%; padding:0.25rem'>" +
+    weatherData.current.uvi +
+    "</span>";
+  //span.setAttribute("style","color:white;background-color:red;");
+  currentWeatherDisplayEl.append(cityDisplayNameEl);
+  currentWeatherDisplayEl.append(tempDisplayEl);
+  currentWeatherDisplayEl.append(windDisplayEl);
+  currentWeatherDisplayEl.append(humidityDisplayEl);
+  currentWeatherDisplayEl.append(uvDisplayEl);
+  currentWeatherDisplayEl.setAttribute(
+    "style",
+    " padding:2rem;font-weight:bold;background-color:#9198e5;"
+  );
 
   // console.log(" Temperature:" + " " + weatherData.current.temp + " " + "ºF");
 }
 
-displayTodaysWeather();
-displayForecast();
+// displayTodaysWeather();
+// displayForecast();
 function displayForecast(weatherData, city) {
   for (var i = 0; i < 5; i++) {
     var dueDate = moment()
