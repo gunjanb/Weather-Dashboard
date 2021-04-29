@@ -18,10 +18,11 @@ function searchSubmitHandler(event) {
   var cityName = cityNameEl.value.trim();
   console.log("in submit ", cityName);
   if (cityName) {
+    // setTimeout(function () {}, 3000);
     getCityWeather(cityName);
     addToHistory(cityName);
-    currentWeatherDisplayEl.textContent = "";
-    cityNameEl.value = "";
+    // currentWeatherDisplayEl.textContent = "";
+    // cityNameEl.value = "";
   } else {
     alert("Please enter  city name");
   }
@@ -30,40 +31,70 @@ function searchSubmitHandler(event) {
 function getCityWeather(city) {
   //   var apiUrl = "https://api.github.com/users/" + user + "/repos";
   //The latitude of Seattle, WA, USA is 47.608013, and the longitude is -122.335167
-  var apiUrl =
-    "https://api.openweathermap.org/data/2.5/weather?q=" +
-    city +
-    "&appid=" +
-    apiKey +
-    "&units=imperial";
+  var apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`;
 
-  console.log("apiURL", apiUrl);
-  // fetch(apiUrl)
-  //   .then(function (response) {
-  //     if (response.ok) {
-  //       response.json().then(function (data) {
-  //         console.log("data is ", data);
-  //         // console.log("typeof", typeof data);
-  //         displayTodaysWeather(data, city);
-  //         addToHistory(city);
+  //   fetch(apiUrl)
+  //     .then(function (response) {
+  //       if (response.ok) {
+  //         // console.log("dtata", data);
+  //         return response.json();
+  //       } else {
+  //         alert("Error: " + response.statusText);
   //         return;
-  //       });
-  //     } else {
-  //       alert("Error: " + response.statusText);
-  //     }
-  //   })
-  //   .catch(function (error) {
-  //     alert("Unable to connect to weather api");
-  //   });
+  //       } // pass the data as promise to next then block
+  //     })
+  //     .then(function (data) {
+  //       var lat = data.coord.lat;
+  //       var lon = data.coord.lon;
+  //       console.log("lat", lat);
+  //       console.log("lon", lon);
+  //       console.log("data", data);
+
+  //       console.log("here");
+
+  //       return fetch(
+  //         "https://api.openweathermap.org/data/2.5/onecall?lat=" +
+  //           lat +
+  //           "&lon=" +
+  //           lon +
+  //           "&exclude=minutely,hourly" +
+  //           "&appid=" +
+  //           apiKey +
+  //           "&units=imperial"
+  //       )
+  //         .then(function (response) {
+  //           console.log("response from onecall", response);
+  //           if (response.ok) {
+  //             response.json().then(function (data) {
+  //               console.log("data is ", data);
+  //               // // console.log("typeof", typeof data);
+  //               displayTodaysWeather(data, city);
+  //               displayForecast(data, city);
+  //               addToHistory(city);
+  //             });
+  //           } else {
+  //             alert("Error: " + response.statusText);
+  //           }
+  //         })
+  //         .catch(function (error) {
+  //           console.log("Request failed", error);
+  //         });
+  //     });
+  // }
+
+  // Make a request for user.json
   fetch(apiUrl)
     .then(function (response) {
-      if (response.ok) {
-        // console.log("dtata", data);
+      if (response.status === 200) {
+        // If the page is not on the 404 page, redirect to it.
         return response.json();
       } else {
+        //return Promise.reject(new Error(response.statusText));
         alert("Error: " + response.statusText);
-      } // pass the data as promise to next then block
+        return Promise.reject(new Error(response.statusText));
+      }
     })
+    // .catch(alert)
     .then(function (data) {
       var lat = data.coord.lat;
       var lon = data.coord.lon;
@@ -74,31 +105,23 @@ function getCityWeather(city) {
       console.log("here");
 
       return fetch(
-        "https://api.openweathermap.org/data/2.5/onecall?lat=" +
-          lat +
-          "&lon=" +
-          lon +
-          "&exclude=minutely,hourly" +
-          "&appid=" +
-          apiKey +
-          "&units=imperial"
-      ); // make a 2nd request and return a promise
+        `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly&appid=${apiKey}&units=imperial`
+      );
     })
     .then(function (response) {
-      if (response.ok) {
-        response.json().then(function (data) {
-          console.log("data is ", data);
-          // // console.log("typeof", typeof data);
-          displayTodaysWeather(data, city);
-          displayForecast(data, city);
-          addToHistory(city);
-        });
+      if (response.status === 200) {
+        // If the page is not on the 404 page, redirect to it.
+        return response.json();
       } else {
         alert("Error: " + response.statusText);
+        return Promise.reject(new Error(response.statusText));
       }
     })
-    .catch(function (error) {
-      console.log("Request failed", error);
+    // .catch(alert)
+    .then(function (data) {
+      displayTodaysWeather(data, city);
+      displayForecast(data, city);
+      addToHistory(city);
     });
 }
 
@@ -277,3 +300,37 @@ submitButtonEl.addEventListener("click", searchSubmitHandler);
 searchHistoryButtonsEl.addEventListener("click", buttonClickHandler);
 
 getCityWeather("seattle");
+
+// const currentWeather = (cityName) => {
+//   fetch(
+//     `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=imperial`
+//   )
+//     .then((res) => {
+//       return res.json();
+//     })
+//     .then((data) => {
+//       const template = `
+//       <section class="current-weather border rounded border-dark p m-1" style=" padding:2rem;font-weight:bold;background-color:#9198e5;">
+//       <h2>${
+//         data.name
+//       } <span style="font-size: 1.4rem;">${new Date().toLocaleDateString()}</span>
+//       <img src="https://openweathermap.org/img/wn/${
+//         data.weather[0].icon
+//       }.png"></h2>
+//       <p>Temp: ${data.main.temp} ºF</p>
+//       <p>Wind: ${data.wind.speed} MPH</p>
+//       <p>Humidity: ${data.main.humidity} %</p>
+//       <p>UV: <span style="background-color:green; border-radius:25%; padding:0.25rem">
+//       0.13
+//       </span>
+//       </p>
+//      </section>
+//     `;
+
+//       currentWeatherDisplayEl.innerHTML = template;
+//     });
+// };
+
+// document.addEventListener("DOMContentLoaded", function () {
+//   getCityWeather("Seattle");
+// });
