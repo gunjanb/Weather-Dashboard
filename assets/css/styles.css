@@ -1,14 +1,18 @@
-.custom-color {
-  background: linear-gradient(#e66465, #9198e5);
-  font-weight: bolder;
-}
-
 body {
   background-color: #ffe9ff;
 }
+/* search icon */
 .fa-search {
   color: black;
 }
+
+/* bg color for weather divs  and serach box */
 .custom-bg-color {
   background-color: #9198e5;
+}
+
+/* for header */
+.custom-color {
+  background: linear-gradient(#e66465, #9198e5);
+  font-weight: bolder;
 }
