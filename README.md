@@ -26,4 +26,4 @@ When user selects a city from dropdown which is a list of all city serached and 
 
 ## Deployed Application
 
-[Weather Dashboard]()
+[Weather Dashboard](https://gunjanb.github.io/Weather-Dashboard/)
