@@ -109,8 +109,6 @@ function addToHistory(cityclicked) {
 
 // display todays weather
 function displayTodaysWeather(weatherData, cityname) {
-  //why its showing object object  here not in the fetch section console.log("data is" + weatherData);?
-
   //get date
   var todayDate = moment().format("MM/DD/YYYY");
 
@@ -228,16 +226,6 @@ function displayForecast(weatherData, city) {
     var humidityEl = document.createElement("p");
     humidityEl.textContent =
       "Humidity: " + weatherData.daily[i].humidity + " %";
-
-    // divEl?
-    //   .append(dateEl)
-    //   .append(image)
-    //   .append(tempEl)
-    //   .append(windEl)
-    //   .append(humidityEl);
-    //script.js:240 Uncaught (in promise) TypeError: Cannot read property 'append' of undefined
-    // at displayForecast (script.js:240)
-    // at script.js:92
 
     //set  attribute for div
     divEl.setAttribute(
