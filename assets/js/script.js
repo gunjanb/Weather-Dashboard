@@ -1,4 +1,4 @@
-const apiKey = "64bd3999714c46abd7c44d1c5bd7c5fc";
+const apiKey = config.mykey;
 //handlers
 var cityNameEl = document.querySelector("#search-input");
 var submitButtonEl = document.querySelector("#submit-search");
